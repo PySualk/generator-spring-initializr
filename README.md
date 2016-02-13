@@ -13,8 +13,16 @@ npm install -g generator-spring-initializr
 Then generate your new project:
 
 ```bash
+mkdir newProjectFolder
+cd newProjectFolder
 yo spring-initializr
 ```
+
+## What does it do?
+
+The generator uses Spring Initializr (http://start.spring.io/) to create a new Spring
+Boot Project for you. After you entered your desired settings the generator downloads the  project archive for you and extracts it to the current directory.
+
 
 ## Getting To Know Yeoman
 
