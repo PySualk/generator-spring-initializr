@@ -15,7 +15,7 @@
   "keywords": [
     "yeoman-generator",
     "spring",
-    "boot",
+    "boot"
   ],
   "dependencies": {
     "adm-zip": "^0.4.7",
