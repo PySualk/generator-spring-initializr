@@ -1,4 +1,4 @@
-# generator-spring-initializr [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+# generator-spring-initializr [![NPM version][npm-image]][npm-url] [![Dependency Status][daviddm-image]][daviddm-url]
 > Yeoman Generator using Spring Initializr for bootstrapping Spring Boot Projects
 
 ## Installation
