@@ -16,7 +16,6 @@
     "yeoman-generator",
     "spring",
     "boot",
-    "generator"
   ],
   "dependencies": {
     "adm-zip": "^0.4.7",

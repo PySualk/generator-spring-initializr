@@ -3,17 +3,22 @@ var path = require('path');
 var assert = require('yeoman-assert');
 var helpers = require('yeoman-generator').test;
 
-describe('generator-spring-initializr:app', function () {
-  before(function (done) {
+describe('generator-spring-initializr:app', function() {
+  before(function(done) {
     helpers.run(path.join(__dirname, '../generators/app'))
-      .withOptions({someOption: true})
-      .withPrompts({someAnswer: true})
       .on('end', done);
   });
 
-  it('creates files', function () {
+  it('creates src directory', function() {
     assert.file([
-      'dummyfile.txt'
+      'src/'
+    ]);
+  });
+
+  it('cleanes up temporary files', function() {
+    assert.noFile([
+      'meta.json',
+      'starter.zip'
     ]);
   });
 });
