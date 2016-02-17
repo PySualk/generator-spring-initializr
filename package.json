@@ -1,6 +1,6 @@
 {
   "name": "generator-spring-initializr",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Yeoman Generator using Spring Initializr for bootstrapping Spring Boot Projects",
   "homepage": "https://github.com/PySualk/generator-spring-initializr",
   "author": {
@@ -19,10 +19,10 @@
   ],
   "dependencies": {
     "adm-zip": "^0.4.7",
-    "chalk": "^1.0.0",
+    "chalk": "^1.1.1",
     "request": "^2.69.0",
-    "yeoman-generator": "^0.21.1",
-    "yosay": "^1.0.2"
+    "yeoman-generator": "^0.22.5",
+    "yosay": "^1.1.0"
   },
   "devDependencies": {
     "yeoman-assert": "^2.0.0",

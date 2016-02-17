@@ -1,4 +1,5 @@
 'use strict';
+
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
@@ -7,14 +8,16 @@ var AdmZip = require('adm-zip');
 var fs = require('fs');
 
 var META_URL = 'https://start.spring.io';
-var STARTER_URL = 'https://start.spring.io/starter.zip';
-var TMP_FILE = 'starter.zip';
 var META_FILE = 'meta.json';
+var STARTER_URL = 'https://start.spring.io/starter.zip';
+var STARTER_FILE = 'starter.zip';
+var WORKING_DIR = '.';
 
-module.exports = yeoman.generators.Base.extend({
+var generator = module.exports = yeoman.Base.extend({
   initializing: function() {
     var done = this.async();
-    // Getting meta data from spring initializr
+    WORKING_DIR = this.destinationRoot();
+    this.log(chalk.green('Downloading Meta Information from Spring initializr'));
     request.get(META_URL)
       .on('error', function() {
         var errorMsg = 'Unable to download meta information from ' + META_URL;
@@ -28,7 +31,8 @@ module.exports = yeoman.generators.Base.extend({
   prompting: function() {
     var done = this.async();
 
-    // Have Yeoman greet the user.
+    fs.accessSync(WORKING_DIR + '/' + META_FILE, fs.F_OK);
+
     this.log(yosay(
       'Welcome to the groovy ' + chalk.red('spring-initializr') + ' generator!'
     ));
@@ -38,7 +42,8 @@ module.exports = yeoman.generators.Base.extend({
     this.log('');
 
     var prompts = [];
-    var data = fs.readFileSync(this.destinationRoot() + '/' + META_FILE);
+
+    var data = fs.readFileSync(WORKING_DIR + '/' + META_FILE);
 
     var meta = JSON.parse(data);
     for (var key in meta) {
@@ -47,20 +52,19 @@ module.exports = yeoman.generators.Base.extend({
       }
 
       if (meta[key].type === 'hierarchical-multi-select') {
-        var choicesMultiSelect = [];
         for (var i = 0; i < meta[key].values.length; i++) {
+          var choicesMultiSelect = [];
           for (var j = 0; j < meta[key].values[i].values.length; j++) {
             choicesMultiSelect.push(meta[key].values[i].values[j].id);
           }
+          choicesMultiSelect.sort();
+          prompts.push({
+            type: 'checkbox',
+            name: 'dependencies' + i,
+            message: 'Select ' + meta[key].values[i].name + ' Dependencies',
+            choices: choicesMultiSelect
+          });
         }
-        choicesMultiSelect.sort();
-        prompts.push({
-          type: 'checkbox',
-          name: key,
-          message: 'Select ' + key + ' (Press space to select)',
-          choices: choicesMultiSelect,
-          default: meta[key].default
-        });
       } else if (meta[key].type === 'text') {
         prompts.push({
           type: 'input',
@@ -81,20 +85,19 @@ module.exports = yeoman.generators.Base.extend({
           default: meta[key].default
         });
       } else if (meta[key].type === 'action') {
-          var actionChoices = [];
-          for (var l = 0; l < meta[key].values.length; l++) {
-            actionChoices.push(meta[key].values[l].id);
-          }
-          prompts.push({
-            type: 'list',
-            name: key,
-            message: 'Select ' + key,
-            choices: actionChoices,
-            default: meta[key].default
-          });
+        var actionChoices = [];
+        for (var l = 0; l < meta[key].values.length; l++) {
+          actionChoices.push(meta[key].values[l].id);
+        }
+        prompts.push({
+          type: 'list',
+          name: key,
+          message: 'Select ' + key,
+          choices: actionChoices,
+          default: meta[key].default
+        });
       }
     }
-
     this.prompt(prompts, function(props) {
       this.props = props;
       done();
@@ -104,9 +107,20 @@ module.exports = yeoman.generators.Base.extend({
     downloading: function() {
       var done = this.async();
       this.log(chalk.green('Downloading Spring Boot Archive'));
+
+      var formData = {};
+      formData['dependencies'] = [];
+      for (var key in this.props) {
+        if (key.includes('dependencies')) {
+          formData['dependencies'] = formData['dependencies'].concat(this.props[key]);
+        } else {
+          formData[key] = this.props[key];
+        }
+      }
+
       request.post({
           url: STARTER_URL,
-          form: this.props
+          form: formData
         })
         .on('error', function(err) {
           console.log(chalk.red(err));
@@ -114,19 +128,28 @@ module.exports = yeoman.generators.Base.extend({
         .on('end', function() {
           done();
         })
-        .pipe(fs.createWriteStream(this.destinationRoot() + '/' + TMP_FILE));
+        .pipe(fs.createWriteStream(this.destinationRoot() + '/' + STARTER_FILE));
     },
     unzipping: function() {
-      this.log(chalk.green('Unzipping Spring Boot Archive'));
+      this.log(chalk.green('Extracting Spring Boot Archive'));
       var done = this.async();
-      var zip = new AdmZip(TMP_FILE);
-      zip.extractAllTo('.', true);
-      done();
+      fs.lstat(this.destinationRoot() + '/' + STARTER_FILE, function(err, stats) {
+        var zip = new AdmZip(STARTER_FILE);
+        var zipEntries = zip.getEntries();
+        zipEntries.forEach(function(zipEntry) {
+          console.log('Extracting ' + zipEntry.entryName);
+          zip.extractEntryTo(zipEntry, WORKING_DIR, true, true);
+        });
+        zip.extractAllTo(WORKING_DIR, true);
+        done();
+      });
     }
   },
   end: function() {
     this.log(chalk.green('Cleaning Up'));
-    fs.unlinkSync(TMP_FILE);
     fs.unlinkSync(META_FILE);
+    this.log('Removing ', META_FILE)
+    fs.unlinkSync(STARTER_FILE);
+    this.log('Removing ', STARTER_FILE);
   }
 });
