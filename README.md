@@ -23,6 +23,8 @@ yo spring-initializr
 The generator uses Spring Initializr (http://start.spring.io/) to create a new Spring
 Boot Project for you. After you entered your desired settings the generator downloads the  project archive for you and extracts it to the current directory.
 
+![](https://github.com/PySualk/generator-spring-initializr/blob/master/first-step.gif)
+![](https://github.com/PySualk/generator-spring-initializr/blob/master/second-step.gif) 
 
 ## Getting To Know Yeoman
 
