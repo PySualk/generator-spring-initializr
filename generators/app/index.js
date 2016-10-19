@@ -15,18 +15,19 @@ var WORKING_DIR = '.';
 
 var generator = module.exports = yeoman.Base.extend({
   initializing: function() {
-    var done = this.async();
+    var done = this.async();    
     WORKING_DIR = this.destinationRoot();
+    
+    var dest = fs.createWriteStream(this.destinationRoot() + '/' + META_FILE);
+    dest.once('finish', function() { done(); });
+
     this.log(chalk.green('Downloading Meta Information from Spring initializr'));
     request.get(META_URL)
       .on('error', function() {
         var errorMsg = 'Unable to download meta information from ' + META_URL;
         console.log(chalk.red(errorMsg));
-      })
-      .on('end', function() {
-        done();
-      })
-      .pipe(fs.createWriteStream(this.destinationRoot() + '/' + META_FILE));
+      })          
+      .pipe(dest);
   },
   prompting: function() {
     var done = this.async();
