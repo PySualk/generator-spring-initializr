@@ -1,10 +1,10 @@
 {
   "name": "generator-spring-initializr",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Yeoman Generator using Spring Initializr for bootstrapping Spring Boot Projects",
   "homepage": "https://github.com/PySualk/generator-spring-initializr",
   "author": {
-    "name": "PySualk",
+    "name": "Klaus Wilhelmi",
     "email": "pysualk@users.noreply.github.com",
     "url": "https://github.com/PySualk/"
   },
@@ -15,36 +15,19 @@
   "keywords": [
     "yeoman-generator",
     "spring",
-    "boot"
+    "springboot",
+    "spring-boot",
+    "java",
+    "maven",
+    "gradle"
   ],
   "dependencies": {
-    "adm-zip": "^0.4.7",
-    "chalk": "^1.1.1",
-    "request": "^2.69.0",
-    "yeoman-generator": "^0.22.5",
-    "yosay": "^1.1.0"
-  },
-  "devDependencies": {
-    "yeoman-assert": "^2.0.0",
-    "eslint-config-xo-space": "^0.7.0",
-    "gulp": "^3.9.0",
-    "gulp-eslint": "^1.0.0",
-    "gulp-exclude-gitignore": "^1.0.0",
-    "gulp-istanbul": "^0.10.3",
-    "gulp-mocha": "^2.0.0",
-    "gulp-plumber": "^1.0.0",
-    "gulp-nsp": "^2.1.0"
-  },
-  "eslintConfig": {
-    "extends": "xo-space",
-    "env": {
-      "mocha": true
-    }
+    "adm-zip": "^0.4.13",
+    "chalk": "^2.4.2",
+    "request": "^2.88.0",
+    "yeoman-generator": "^2.0.5",
+    "yosay": "^2.0.2"
   },
   "repository": "PySualk/generator-spring-initializr",
-  "scripts": {
-    "prepublish": "gulp prepublish",
-    "test": "gulp"
-  },
   "license": "MIT"
 }
